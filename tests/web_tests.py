@@ -10,4 +10,3 @@ class WebAppTest(TestCase):
     def test_plan_create_message(self):
         response = self.client.get("/")
         self.assertIn('Create a new plan', response.data)
-
