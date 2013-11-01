@@ -1,7 +1,4 @@
-import web
-from flask.ext.sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy(web.app)
+from app import db
 
 class Plan(db.Model):
     id = db.Column(db.Integer, primary_key=True)

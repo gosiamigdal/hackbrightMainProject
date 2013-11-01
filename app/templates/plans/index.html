@@ -1,4 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
 Create a new plan
+
+
+{% for plan in plans %}
+    <p>{{plan.name}}</p>
+{% endfor %}
 {% endblock %}

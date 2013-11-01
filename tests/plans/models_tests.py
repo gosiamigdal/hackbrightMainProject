@@ -1,6 +1,6 @@
 from flask.ext.testing import TestCase
-import web
-import models
+from app import app, db
+from app.plans.models import Plan
 from datetime import datetime, timedelta
 
 class ModelsTest(TestCase):
@@ -10,31 +10,29 @@ class ModelsTest(TestCase):
     CURRENT_TIME = datetime.utcnow()
 
     def setUp(self):
-
-        models.db.create_all()
+        db.create_all()
 
     def tearDown(self):
+        db.session.remove()
+        db.drop_all()
 
-        models.db.session.remove()
-        models.db.drop_all()
-    
     def create_app(self):
-        web.app.config['TESTING'] = True
-        return web.app
+        app.config['TESTING'] = True
+        return app
 
     def create_plan(self, name='driving a dinner plate'):
         now = ModelsTest.CURRENT_TIME
         later = ModelsTest.CURRENT_TIME + timedelta(seconds=2)
-        
-        plan = models.Plan(name, now, later)
-        models.db.session.add(plan)
-        models.db.session.commit()
-        
-        return models.Plan.query.all()[-1]
+
+        plan = Plan(name, now, later)
+        db.session.add(plan)
+        db.session.commit()
+
+        return Plan.query.all()[-1]
 
     def test_plan_creation(self):
         plan = self.create_plan()
-        self.assertIn(plan, models.db.session)
+        self.assertIn(plan, db.session)
 
     def test_plan_name_assignment(self):
         plan = self.create_plan()
